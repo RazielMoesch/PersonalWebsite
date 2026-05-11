@@ -1,0 +1,301 @@
+.home-page-demo-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.home-page-demo-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.home-page-demo-container h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    font-size: clamp(2.5rem, 6vw, 8rem);
+    font-weight: 100;
+    color: #ffffff;
+    text-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.6), 0 0 4vw rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+    z-index: 1;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    filter: blur(0.75vw);
+    transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), filter 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    white-space: nowrap;
+}
+
+.home-page-demo-container h2 {
+    position: absolute;
+    top: calc(50% + clamp(2.5rem, 6vw, 5rem));
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    font-size: clamp(0.85rem, 2vw, 1.4rem);
+    font-weight: 400;
+    color: #888888;
+    text-shadow: 0 0.05vw 0.2vw rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    z-index: 1;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0;
+    filter: blur(0.75vw);
+    transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), filter 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    white-space: nowrap;
+}
+
+.hero-in {
+    opacity: 1 !important;
+    filter: blur(0vw) !important;
+}
+
+.hero-out {
+    opacity: 0;
+    filter: blur(0.75vw);
+}
+
+.hero-delay {
+    transition-delay: 0.5s;
+}
+
+.console-toggle-button {
+    position: fixed;
+    top: 7vh;
+    right: clamp(0.5rem, 2vw, 2rem);
+    width: clamp(2.5rem, 4vw, 3rem);
+    height: clamp(2.5rem, 4vw, 3rem);
+    border: none;
+    border-radius: 50%;
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(0.5vw);
+    color: #ffffff;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 0.25vw 1vw rgba(0, 0, 0, 0.4);
+}
+
+.console-toggle-button:hover {
+    background: rgba(40, 40, 40, 0.95);
+    transform: scale(1.1);
+}
+
+.control-panel {
+    position: fixed;
+    top: calc(7vh + clamp(3rem, 5vw, 4rem));
+    right: clamp(0.5rem, 2vw, 2rem);
+    width: clamp(16rem, 22vw, 20rem);
+    max-height: calc(85vh - 7vh);
+    overflow-y: auto;
+    background: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(1.25vw);
+    border: 0.05vw solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75vw;
+    padding: clamp(1rem, 1.5vw, 1.5rem);
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vw, 1rem);
+    box-shadow: 0 0.5vw 2vw rgba(0, 0, 0, 0.6);
+}
+
+.control-panel::-webkit-scrollbar {
+    width: 0.4vw;
+}
+
+.control-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.control-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0.2vw;
+}
+
+.control-panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.25rem, 0.5vw, 0.5rem);
+}
+
+.control-panel-option-title {
+    color: #aaaaaa;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.control-panel-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 0.25vw;
+    min-height: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 0.15vw;
+    outline: none;
+    cursor: pointer;
+}
+
+.control-panel-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: clamp(12px, 1vw, 16px);
+    height: clamp(12px, 1vw, 16px);
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 0 0.5vw rgba(255, 255, 255, 0.4);
+    transition: transform 0.15s ease;
+}
+
+.control-panel-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.control-panel-slider::-moz-range-thumb {
+    width: clamp(12px, 1vw, 16px);
+    height: clamp(12px, 1vw, 16px);
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 0.5vw rgba(255, 255, 255, 0.4);
+}
+
+.console-color-row {
+    display: flex;
+    gap: clamp(0.5rem, 1vw, 1rem);
+    justify-content: center;
+    padding: clamp(0.25rem, 0.5vw, 0.5rem) 0;
+}
+
+.console-color-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: clamp(2rem, 2.5vw, 3rem);
+    height: clamp(2rem, 2.5vw, 3rem);
+    border: none;
+    border-radius: 0.5vw;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+.console-color-input::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.console-color-input::-webkit-color-swatch {
+    border: 0.15vw solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5vw;
+}
+
+.console-color-input::-moz-color-swatch {
+    border: 0.15vw solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5vw;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.4rem, 0.75vw, 0.75rem);
+    color: #cccccc;
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
+    cursor: pointer;
+    padding: clamp(0.15rem, 0.25vw, 0.25rem) 0;
+}
+
+.checkbox-label input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: clamp(14px, 1.2vw, 18px);
+    height: clamp(14px, 1.2vw, 18px);
+    border: 0.15vw solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.3vw;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    border-color: #ffffff;
+    background: #ffffff;
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 30%;
+    top: 10%;
+    width: 25%;
+    height: 50%;
+    border: solid #000000;
+    border-width: 0 0.15vw 0.15vw 0;
+    transform: rotate(45deg);
+}
+
+.reload-button {
+    margin-top: clamp(0.25rem, 0.5vw, 0.5rem);
+    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.25vw, 1rem);
+    border: 0.05vw solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5vw;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    text-transform: uppercase;
+}
+
+.reload-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+    .console-toggle-button {
+        right: 2vw;
+    }
+
+    .control-panel {
+        right: 2vw;
+        width: calc(100vw - 20vw);
+        max-width: none;
+        min-width: 300px;
+        padding: clamp(1rem, 3vw, 1.5rem);
+    }
+
+    .home-page-demo-container h1 {
+        font-size: clamp(2.5rem, 6vw, 8rem);
+    }
+
+    .home-page-demo-container h2 {
+        font-size: clamp(1rem, 3.5vw, 2rem);
+    }
+
+    .control-panel-slider {
+        height: 0.5vw;
+    }
+}

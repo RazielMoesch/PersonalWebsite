@@ -1,0 +1,96 @@
+.navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: hsla(0, 0%, 0%, 0.2);
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.navbar-left-container {
+    padding-left: 2rem;
+}
+
+.navbar-title {
+    color: hsla(0, 0%, 90%, 1);
+    font-size: 1.2rem;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+.navbar-short-name {
+    display: none;
+}
+
+.navbar-right-container {
+    display: flex;
+    margin-right: 3rem;
+    gap: 1rem;
+    align-items: center;
+}
+
+.navbar-link-text {
+    color: hsl(0, 0%, 80%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: .2rem .4rem;
+    border-radius: 1rem;
+    transition: transform .3s ease;
+    cursor: pointer;
+}
+
+.navbar-link-text:hover {
+    color: hsl(0, 0%, 90%);
+    transform: scale(1.1);
+}
+
+/* Logic for the burger icon button */
+.hamburger-closed, .hamburger-open {
+    display: none;
+    margin-right: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.navbar-burger {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    /* Hide full name, show RM */
+    .navbar-full-name { display: none; }
+    .navbar-short-name { 
+        display: block; 
+        color: hsla(0, 0%, 90%, 1);
+    }
+
+    /* Show hamburger toggle on mobile */
+    .hamburger-closed, .hamburger-open {
+        display: block;
+    }
+
+    /* Standard right container is hidden on mobile */
+    .navbar-right-container {
+        display: none;
+    }
+
+    /* Styles for when the burger menu is active */
+    .navbar-right-container-burger {
+        position: fixed;
+        top: 6vh;
+        left: 0;
+        width: 100vw;
+        height: 94vh;
+        background-color: hsla(0, 0%, 5%, 0.95); /* Slightly darker for readability */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        font-size: 1.5rem;
+    }
+}

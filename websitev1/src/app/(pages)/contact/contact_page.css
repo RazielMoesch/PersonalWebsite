@@ -1,0 +1,103 @@
+.contact-page-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.contact-info-card {
+    width: 90%;
+    max-width: 500px;
+    /* Glassmorphism Effect */
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 40px;
+    pointer-events: auto;
+    color: white;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff88;
+}
+
+.availability {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.name-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.divider {
+    height: 1px;
+    width: 60px;
+    background: #fff;
+    margin: 30px 0;
+    opacity: 0.2;
+}
+
+.links-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: white;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.contact-link:hover {
+    transform: translateX(10px);
+}
+
+.label {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.value {
+    font-size: 1.1rem;
+    font-weight: 300;
+    word-break: break-all;
+}
+
+.contact-link:hover .value {
+    color: #00eeff; /* Matches your fluid color */
+}

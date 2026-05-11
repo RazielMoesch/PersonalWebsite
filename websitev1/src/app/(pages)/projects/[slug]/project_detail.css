@@ -1,0 +1,173 @@
+/* --- Root Layout --- */
+.detail-wrapper {
+    background-color: #000;
+    min-height: 100vh;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 120px 5vw 100px 5vw;
+    background-image: 
+        radial-gradient(circle at 50% -20%, #111 0%, #000 100%);
+}
+
+.detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* --- Back Button --- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 60px;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.back-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(-5px);
+}
+
+/* --- Header Section --- */
+.detail-header {
+    margin-bottom: 60px;
+}
+
+.detail-tags {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.detail-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #00eeff;
+    background: rgba(0, 238, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(0, 238, 255, 0.1);
+}
+
+.detail-title {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.04em;
+    background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.detail-intro {
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 700px;
+    font-weight: 300;
+}
+
+/* --- Hero Image --- */
+.detail-hero-image {
+    width: 100%;
+    height: 500px;
+    border-radius: 32px;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 80px;
+    position: relative;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Soft glow behind the image */
+.detail-hero-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 32px;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
+    pointer-events: none;
+}
+
+/* --- Content Styling --- */
+.detail-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+}
+
+.content-section h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #fff;
+}
+
+.long-desc {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300;
+}
+
+/* --- Actions Bar --- */
+.detail-actions {
+    margin-top: 60px;
+    padding-top: 60px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    gap: 20px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 16px 32px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary {
+    background: #ffffff;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background: #00eeff;
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 238, 255, 0.2);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.03);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- Responsive Layout --- */
+@media (max-width: 768px) {
+    .detail-hero-image {
+        height: 300px;
+    }
+    
+    .detail-title {
+        font-size: 3rem;
+    }
+}

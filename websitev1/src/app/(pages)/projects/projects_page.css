@@ -1,0 +1,216 @@
+/* --- 1. Core Layout & Scroll Reset --- */
+
+body html {
+    overflow-y: auto;
+}
+
+.projects-wrapper {
+    min-height: 100vh;
+    height: auto;
+    background-color: #000;
+    color: #ffffff; /* Explicit global text color */
+    padding: 140px 5vw 100px 5vw;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto !important;
+}
+
+/* Force scrollability for the page */
+:global(body), :global(html) {
+    overflow: auto !important;
+    height: auto !important;
+}
+
+/* --- 2. Header Section --- */
+.projects-header {
+    width: 100%;
+    max-width: 1100px;
+    margin-bottom: 60px;
+}
+
+.projects-title {
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -3px;
+    color: #ffffff; /* Fallback color */
+    background: linear-gradient(to bottom, #ffffff 50%, rgba(255, 255, 255, 0.2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.projects-subtitle {
+    color: rgba(255, 255, 255, 0.6); /* Increased opacity for visibility */
+    font-size: 1.2rem;
+    margin-top: 15px;
+    font-weight: 300;
+}
+
+/* --- 3. The Grid --- */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+/* --- 4. Project Card --- */
+.project-card-glass {
+    background: rgba(20, 20, 20, 0.6); /* Slightly darker for text contrast */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    overflow: hidden;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.project-card-glass:hover {
+    transform: translateY(-8px);
+    border-color: rgba(0, 238, 255, 0.5);
+    background: rgba(30, 30, 30, 0.8);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Image Logic */
+.project-preview-image {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #111;
+    position: relative;
+}
+
+.image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.8));
+}
+
+/* --- 5. Content Area --- */
+.project-info {
+    padding: 24px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    z-index: 2; /* Ensure text is above any background layers */
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.tech-tag {
+    font-size: 10px;
+    color: #00eeff;
+    border: 1px solid rgba(0, 238, 255, 0.3);
+    padding: 4px 10px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.project-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: #ffffff; /* Forced visibility */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.project-short-desc {
+    color: rgba(255, 255, 255, 0.7); /* Lighter gray for better reading on dark background */
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* --- 6. Bottom Anchored Buttons --- */
+.button-footer {
+    margin-top: auto; /* This forces the buttons to the bottom */
+}
+
+.btn-demo {
+    width: 100%;
+    padding: 14px;
+    background: rgba(0, 238, 255, 0.1);
+    color: #00eeff;
+    border: 1px solid rgba(0, 238, 255, 0.3);
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-demo:hover {
+    background: #00eeff;
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 238, 255, 0.4);
+}
+
+.project-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary, .btn-secondary {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.btn-primary {
+    background: #ffffff;
+    color: #000000;
+}
+
+.btn-primary:hover {
+    background: #00eeff;
+    transform: scale(1.02);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* --- 7. Mobile Adjustments --- */
+@media (max-width: 768px) {
+    .projects-wrapper {
+        padding-top: 100px;
+    }
+    
+    .projects-title {
+        font-size: 3rem;
+    }
+    
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
