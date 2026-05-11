@@ -62,6 +62,8 @@ fn advect(@builtin(global_invocation_id) id: vec3<u32>) {
     vOut[idx] = sample_v(back_pos) * u.velDecay;
     dOut[idx] = sample_d(back_pos) * u.dyeDecay;
 
+    if (interact.isDown < 0.5) { return; }
+
     let syms = array<vec2<f32>, 4>(
         interact.mousePos, 
         vec2(u.gridW - interact.mousePos.x, interact.mousePos.y),
@@ -71,7 +73,7 @@ fn advect(@builtin(global_invocation_id) id: vec3<u32>) {
     var limit = 1;
     if(interact.symmetry > 0.5) { limit = 2; }
     if(interact.symmetry > 2.5) { limit = 4; }
-    
+
     for(var i=0; i<limit; i++) {
         let d = distance(vec2<f32>(pos), syms[i]);
         let m = exp(-d * d / (interact.radius * interact.radius));
@@ -160,7 +162,7 @@ fn fs(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
     var finalCol: vec3<f32>;
     let v = sample_v(sim_pos);
     let d = sample_d(sim_pos);
-    
+
     if (u.renderMode < 0.5) {
         let r = sample_d(sim_pos - v * u.chromatic * 2.0);
         let g = sample_d(sim_pos - v * u.chromatic);
@@ -183,15 +185,6 @@ fn fs(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
 `
 
 export default function FluidSim() {
-
-    useEffect(() => {
-     
-        if (typeof window !== "undefined") {
-        // Your simulation logic here
-        console.log(window.innerWidth);
-        }
-    }, []);
-
     const canvasRef = useRef(null)
     const mouse = useRef({ x: 0, y: 0, vx: 0, vy: 0, down: 0 })
     const [showConsole, setShowConsole] = useState(false)
@@ -202,23 +195,47 @@ export default function FluidSim() {
         velDecay: 0.99, 
         iter: 50,
         radius: 20, 
-        strength: 5,     // Lowered strength prevents immediate "whitening"
+        strength: 5,
         color: "#ae00ff", 
         symmetry: 0, 
         mode: 0, 
-        bloom: 0.05,     // Drastically lowered bloom keeps it from blowing out to white
-        chromatic: 0.5,  // Lowered chromatic prevents color separation from looking like white noise
+        bloom: 0.05,
+        chromatic: 0.5,
         dt: 0.008
     })
+    const [brushStyle, setBrushStyle] = useState({ left: 0, top: 0, width: 0, height: 0 })
 
     const pRef = useRef(params)
     useEffect(() => { pRef.current = params }, [params])
 
+    // Touch/mouse input handlers
+    const handleMove = (clientX, clientY, movementX, movementY) => {
+        mouse.current.vx = movementX
+        mouse.current.vy = movementY
+        mouse.current.x = clientX
+        mouse.current.y = clientY
+    }
+
+    const handleStart = (clientX, clientY) => {
+        mouse.current.x = clientX
+        mouse.current.y = clientY
+        mouse.current.vx = 0
+        mouse.current.vy = 0
+        mouse.current.down = 1
+    }
+
+    const handleEnd = () => {
+        mouse.current.down = 0
+        mouse.current.vx = 0
+        mouse.current.vy = 0
+    }
+
     useEffect(() => {
         let dev, ctx, mod, pipes = {}, uB, iB, dBs, vBs, pB, divB, curB, bgs, frameId
         const init = async () => {
+            if (typeof window === 'undefined') return
             const adapter = await navigator.gpu?.requestAdapter({ powerPreference: 'high-performance' })
-            if (!adapter) return;
+            if (!adapter) return
             dev = await adapter.requestDevice()
             ctx = canvasRef.current.getContext("webgpu")
             const format = navigator.gpu.getPreferredCanvasFormat()
@@ -253,7 +270,7 @@ export default function FluidSim() {
             const res = pRef.current.res
             const s = res * res
             uB = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST })
-            iB = dev.createBuffer({ size: 48, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST }) 
+            iB = dev.createBuffer({ size: 48, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST })
             vBs = [0,1].map(() => dev.createBuffer({ size: s * 8, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST }))
             dBs = [0,1].map(() => dev.createBuffer({ size: s * 4, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST }))
             pB = dev.createBuffer({ size: s * 4, usage: GPUBufferUsage.STORAGE })
@@ -274,46 +291,94 @@ export default function FluidSim() {
                 ]
             }))
             const tick = (time) => {
-                const curRes = pRef.current.res;
-                const idx = Math.floor(time / 16) % 2;
-                const rgb = pRef.current.color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16) / 255);
-                dev.queue.writeBuffer(uB, 0, new Float32Array([pRef.current.dt, curRes, curRes, pRef.current.dyeDecay, pRef.current.velDecay, pRef.current.vort, 0, 0, pRef.current.mode, ...rgb, window.innerWidth / window.innerHeight, time/1000, pRef.current.bloom, pRef.current.chromatic]));
-                dev.queue.writeBuffer(iB, 0, new Float32Array([(mouse.current.x / window.innerWidth) * curRes, (mouse.current.y / window.innerHeight) * curRes, mouse.current.vx, mouse.current.vy, pRef.current.radius, pRef.current.strength, pRef.current.symmetry, 1]));
-                const enc = dev.createCommandEncoder();
+                const curRes = pRef.current.res
+                const idx = Math.floor(time / 16) % 2
+                const rgb = pRef.current.color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16) / 255)
+                const ww = typeof window !== 'undefined' ? window.innerWidth : 1920
+                const wh = typeof window !== 'undefined' ? window.innerHeight : 1080
+                dev.queue.writeBuffer(uB, 0, new Float32Array([pRef.current.dt, curRes, curRes, pRef.current.dyeDecay, pRef.current.velDecay, pRef.current.vort, 0, 0, pRef.current.mode, ...rgb, ww / wh, time/1000, pRef.current.bloom, pRef.current.chromatic]))
+                dev.queue.writeBuffer(iB, 0, new Float32Array([
+                    (mouse.current.x / ww) * curRes,
+                    (mouse.current.y / wh) * curRes,
+                    mouse.current.vx,
+                    mouse.current.vy,
+                    pRef.current.radius,
+                    pRef.current.strength,
+                    pRef.current.symmetry,
+                    mouse.current.down
+                ]))
+                const enc = dev.createCommandEncoder()
                 const runPass = (p, bg) => { 
                     const cp = enc.beginComputePass(); cp.setPipeline(p); cp.setBindGroup(0, bg); 
-                    cp.dispatchWorkgroups(Math.ceil(curRes/8), Math.ceil(curRes/8)); cp.end(); 
+                    cp.dispatchWorkgroups(Math.ceil(curRes/8), Math.ceil(curRes/8)); cp.end()
                 }
-                runPass(pipes.adv, bgs[idx]); runPass(pipes.curl, bgs[1-idx]); runPass(pipes.conf, bgs[1-idx]);
-                runPass(pipes.div, bgs[1-idx]); for(let i=0; i < pRef.current.iter; i++) runPass(pipes.pres, bgs[1-idx]);
-                runPass(pipes.proj, bgs[1-idx]);
-                const rp = enc.beginRenderPass({ colorAttachments: [{ view: ctx.getCurrentTexture().createView(), loadOp: 'clear', clearValue: [0,0,0,1], storeOp: 'store' }] });
-                rp.setPipeline(pipes.render); rp.setBindGroup(0, bgs[1-idx]); rp.draw(4); rp.end();
-                dev.queue.submit([enc.finish()]);
-                mouse.current.vx *= 0.95; mouse.current.vy *= 0.95;
-                frameId = requestAnimationFrame(tick);
+                runPass(pipes.adv, bgs[idx]); runPass(pipes.curl, bgs[1-idx]); runPass(pipes.conf, bgs[1-idx])
+                runPass(pipes.div, bgs[1-idx]); for(let i=0; i < pRef.current.iter; i++) runPass(pipes.pres, bgs[1-idx])
+                runPass(pipes.proj, bgs[1-idx])
+                const rp = enc.beginRenderPass({ colorAttachments: [{ view: ctx.getCurrentTexture().createView(), loadOp: 'clear', clearValue: [0,0,0,1], storeOp: 'store' }] })
+                rp.setPipeline(pipes.render); rp.setBindGroup(0, bgs[1-idx]); rp.draw(4); rp.end()
+                dev.queue.submit([enc.finish()])
+                mouse.current.vx *= 0.95; mouse.current.vy *= 0.95
+                frameId = requestAnimationFrame(tick)
             }
-            tick(0);
+            tick(0)
         }
-        init();
-        const resize = () => { if(canvasRef.current){ canvasRef.current.width = window.innerWidth; canvasRef.current.height = window.innerHeight; } }
-        window.addEventListener('resize', resize); resize();
-        return () => { cancelAnimationFrame(frameId); dev?.destroy(); window.removeEventListener('resize', resize); }
+        init()
+        const resize = () => {
+            if (typeof window === 'undefined' || !canvasRef.current) return
+            canvasRef.current.width = window.innerWidth
+            canvasRef.current.height = window.innerHeight
+        }
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', resize)
+            resize()
+        }
+        return () => {
+            if (frameId) cancelAnimationFrame(frameId)
+            if (dev) dev.destroy()
+            if (typeof window !== 'undefined') window.removeEventListener('resize', resize)
+        }
     }, [params.res])
 
-    const update = (key, val) => setParams(prev => ({...prev, [key]: val}));
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        const updateBrush = () => {
+            setBrushStyle({
+                left: mouse.current.x,
+                top: mouse.current.y,
+                width: params.radius * (window.innerWidth / params.res) * 2,
+                height: params.radius * (window.innerWidth / params.res) * 2
+            })
+        }
+        const interval = setInterval(updateBrush, 16)
+        return () => clearInterval(interval)
+    }, [params.radius, params.res])
+
+    const update = (key, val) => setParams(prev => ({...prev, [key]: val}))
 
     return (
         <div className="fluid-sim-isolated-root">
-            <canvas ref={canvasRef} className="fluid-canvas"
-                onMouseMove={e => { mouse.current.vx = e.movementX; mouse.current.vy = e.movementY; mouse.current.x = e.clientX; mouse.current.y = e.clientY; }}
+            <canvas
+                ref={canvasRef}
+                className="fluid-canvas"
+                onMouseMove={e => handleMove(e.clientX, e.clientY, e.movementX, e.movementY)}
+                onMouseDown={() => handleStart(mouse.current.x, mouse.current.y)}
+                onMouseUp={handleEnd}
+                onMouseLeave={handleEnd}
+                onTouchStart={e => {
+                    e.preventDefault()
+                    const t = e.touches[0]
+                    handleStart(t.clientX, t.clientY)
+                }}
+                onTouchMove={e => {
+                    e.preventDefault()
+                    const t = e.touches[0]
+                    handleMove(t.clientX, t.clientY, t.clientX - mouse.current.x, t.clientY - mouse.current.y)
+                }}
+                onTouchEnd={handleEnd}
             />
             <div className="cursor-overlay">
-                <div className="brush-indicator" style={{ 
-                    left: mouse.current.x, top: mouse.current.y,
-                    width: params.radius * (window.innerWidth / params.res) * 2,
-                    height: params.radius * (window.innerWidth / params.res) * 2,
-                }} />
+                <div className="brush-indicator" style={brushStyle} />
             </div>
             <button className="console-toggle-btn" onClick={() => setShowConsole(!showConsole)}>
                 {showConsole ? "✕" : "⚙️"}
@@ -333,7 +398,7 @@ export default function FluidSim() {
                     <div className="control-group"><span className="control-label">Time</span><input type="range" className="range-slider" min="0.001" max="0.1" step="0.001" value={params.dt} onChange={e => update('dt', parseFloat(e.target.value))} /></div>
                     <div className="control-group"><span className="control-label">Sym</span><select className="control-input" value={params.symmetry} onChange={e => update('symmetry', parseInt(e.target.value))}><option value={0}>Off</option><option value={1}>Mirror</option><option value={3}>Quad</option></select></div>
                     <input type="color" style={{ width: '100%', height: '30px', border: 'none', background: 'none' }} value={params.color} onChange={e => update('color', e.target.value)} />
-                    <button className="action-btn" onClick={() => window.location.reload()}>Reset</button>
+                    <button className="action-btn" onClick={() => { if (typeof window !== 'undefined') window.location.reload() }}>Reset</button>
                 </div>
             )}
         </div>

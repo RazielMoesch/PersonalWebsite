@@ -2,6 +2,7 @@
 
 body {
     overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .fluid-sim-isolated-root {
@@ -12,13 +13,16 @@ body {
     cursor: default;
     position: relative;
     font-family: monospace;
-    
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .fluid-sim-isolated-root .fluid-canvas {
     width: 100%;
     height: 100%;
     display: block;
+    touch-action: none;
 }
 
 .fluid-sim-isolated-root .cursor-overlay {
@@ -29,14 +33,6 @@ body {
     height: 100%;
     pointer-events: none;
 }
-/* 
-.fluid-sim-isolated-root .brush-indicator {
-    position: absolute;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-} */
 
 .fluid-sim-isolated-root .console-toggle-btn {
     position: absolute;
@@ -45,8 +41,8 @@ body {
     background: rgba(0, 0, 0, 0.85);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -54,32 +50,41 @@ body {
     cursor: pointer;
     z-index: 100;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     font-size: 18px;
+    touch-action: manipulation;
 }
 
 .fluid-sim-isolated-root .control-panel {
     position: absolute;
-    bottom: 30px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(5, 5, 5, 0.95);
     backdrop-filter: blur(30px);
-    padding: 25px;
+    -webkit-backdrop-filter: blur(30px);
+    padding: 20px;
     border-radius: 15px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 16px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     z-index: 90;
     width: max-content;
+    max-width: 95vw;
+    max-height: 70vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
 }
 
 .fluid-sim-isolated-root .control-group {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
 }
 
 .fluid-sim-isolated-root .control-label {
@@ -87,23 +92,63 @@ body {
     font-size: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    white-space: nowrap;
 }
 
 .fluid-sim-isolated-root .control-input {
     background: #151515;
     color: #fff;
     border: 1px solid #333;
-    padding: 5px;
-    font-size: 10px;
+    padding: 8px 5px;
+    font-size: 12px;
     border-radius: 4px;
+    min-height: 32px;
+    touch-action: manipulation;
 }
 
 .fluid-sim-isolated-root .range-slider {
     width: 100%;
-    height: 4px;
+    height: 24px;
     appearance: none;
-    background: #333;
+    -webkit-appearance: none;
+    background: transparent;
     outline: none;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.fluid-sim-isolated-root .range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    margin-top: -7px;
+}
+
+.fluid-sim-isolated-root .range-slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+}
+
+.fluid-sim-isolated-root .range-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+.fluid-sim-isolated-root .range-slider::-moz-range-track {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
 }
 
 .fluid-sim-isolated-root .action-btn {
@@ -111,9 +156,56 @@ body {
     background: #fff;
     color: #000;
     border: none;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     font-weight: bold;
-    font-size: 10px;
+    font-size: 12px;
     cursor: pointer;
+    touch-action: manipulation;
+    min-height: 40px;
+}
+
+/* Mobile overrides */
+@media (max-width: 768px) {
+    .fluid-sim-isolated-root .control-panel {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 16px;
+        gap: 12px;
+        bottom: 10px;
+        max-height: 60vh;
+    }
+
+    .fluid-sim-isolated-root .action-btn {
+        grid-column: span 3;
+    }
+
+    .fluid-sim-isolated-root .console-toggle-btn {
+        
+        top: 8vh;
+        right: 5vw;
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fluid-sim-isolated-root .control-panel {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .fluid-sim-isolated-root .action-btn {
+        grid-column: span 2;
+    }
+
+    .fluid-sim-isolated-root .control-input {
+        font-size: 14px;
+        padding: 10px 6px;
+    }
+
+    .fluid-sim-isolated-root .control-label {
+        font-size: 9px;
+    }
 }
