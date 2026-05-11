@@ -1,5 +1,7 @@
-import FluidSim from "@/components/fluid_sim"
 
+'use client'
+
+import FluidSim from "@/components/fluid_sim"
 
 
 const FluidSimDemo = () => {

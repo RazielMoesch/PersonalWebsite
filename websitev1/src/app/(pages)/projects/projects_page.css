@@ -17,11 +17,6 @@ body html {
     overflow-y: auto !important;
 }
 
-/* Force scrollability for the page */
-:global(body), :global(html) {
-    overflow: auto !important;
-    height: auto !important;
-}
 
 /* --- 2. Header Section --- */
 .projects-header {

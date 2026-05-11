@@ -183,6 +183,15 @@ fn fs(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
 `
 
 export default function FluidSim() {
+
+    useEffect(() => {
+     
+        if (typeof window !== "undefined") {
+        // Your simulation logic here
+        console.log(window.innerWidth);
+        }
+    }, []);
+
     const canvasRef = useRef(null)
     const mouse = useRef({ x: 0, y: 0, vx: 0, vy: 0, down: 0 })
     const [showConsole, setShowConsole] = useState(false)
