@@ -1,211 +1,220 @@
-/* Isolated Root */
-
-body {
-    overflow-x: hidden;
-    -webkit-tap-highlight-color: transparent;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap');
 
 .fluid-sim-isolated-root {
     width: 100vw;
     height: 100vh;
     background: #000;
     overflow: hidden;
-    cursor: default;
     position: relative;
-    font-family: monospace;
+    font-family: 'Inter', sans-serif;
     touch-action: none;
-    -webkit-user-select: none;
     user-select: none;
 }
 
-.fluid-sim-isolated-root .fluid-canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-    touch-action: none;
+/* Header UI */
+.ui-header {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    pointer-events: none;
+    z-index: 10;
 }
 
-.fluid-sim-isolated-root .cursor-overlay {
+.main-title {
+    margin: 0;
+    font-size: 72px; /* Made larger for a more impactful look */
+    font-weight: 800;
+    letter-spacing: -4px; /* Tighter tracking for a modern feel */
+    color: white;
+    line-height: 0.8;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    opacity: 0.9;
+}
+
+/* Container for the hint */
+.hint-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* The animated "Ghost" cursor */
+.ghost-cursor {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    position: relative;
+    animation: dragHint 2.5s infinite ease-in-out;
+}
+
+/* A little trail effect behind the ghost cursor */
+.ghost-cursor::after {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
     width: 100%;
     height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(8px);
+}
+
+.hint-text {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+}
+
+/* The Drag Animation */
+@keyframes dragHint {
+    0% {
+        transform: translateX(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        transform: translateX(60px); /* Moves the circle to the right */
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(60px);
+        opacity: 0;
+    }
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 15px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: #00ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff88;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Controls UI */
+.glass-effect {
+    background: rgba(10, 10, 10, 0.6) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-panel {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 24px;
+    border-radius: 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    color: #fff;
+    width: max-content;
+    max-width: 90vw;
+    z-index: 100;
+}
+
+.control-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.control-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.range-slider {
+    width: 100%;
+    accent-color: white;
+    cursor: pointer;
+}
+
+.color-picker {
+    width: 100%;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    cursor: pointer;
+}
+
+.action-btn {
+    grid-column: span 4;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: white;
+    color: black;
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.action-btn:active { transform: scale(0.98); }
+
+.console-toggle-btn {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    z-index: 101;
+}
+
+.brush-indicator {
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
     pointer-events: none;
 }
 
-.fluid-sim-isolated-root .console-toggle-btn {
-    position: absolute;
-    top: 7vh;
-    right: 3vw;
-    background: rgba(0, 0, 0, 0.85);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 100;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    font-size: 18px;
-    touch-action: manipulation;
-}
-
-.fluid-sim-isolated-root .control-panel {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(5, 5, 5, 0.95);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    padding: 20px;
-    border-radius: 15px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    z-index: 90;
-    width: max-content;
-    max-width: 95vw;
-    max-height: 70vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
-}
-
-.fluid-sim-isolated-root .control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 0;
-}
-
-.fluid-sim-isolated-root .control-label {
-    opacity: 0.5;
-    font-size: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    white-space: nowrap;
-}
-
-.fluid-sim-isolated-root .control-input {
-    background: #151515;
-    color: #fff;
-    border: 1px solid #333;
-    padding: 8px 5px;
-    font-size: 12px;
-    border-radius: 4px;
-    min-height: 32px;
-    touch-action: manipulation;
-}
-
-.fluid-sim-isolated-root .range-slider {
-    width: 100%;
-    height: 24px;
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent;
-    outline: none;
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-.fluid-sim-isolated-root .range-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    cursor: pointer;
-    margin-top: -7px;
-}
-
-.fluid-sim-isolated-root .range-slider::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 4px;
-    background: #333;
-    border-radius: 2px;
-}
-
-.fluid-sim-isolated-root .range-slider::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    cursor: pointer;
-    border: none;
-}
-
-.fluid-sim-isolated-root .range-slider::-moz-range-track {
-    width: 100%;
-    height: 4px;
-    background: #333;
-    border-radius: 2px;
-}
-
-.fluid-sim-isolated-root .action-btn {
-    grid-column: span 3;
-    background: #fff;
-    color: #000;
-    border: none;
-    padding: 12px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 12px;
-    cursor: pointer;
-    touch-action: manipulation;
-    min-height: 40px;
-}
-
-/* Mobile overrides */
 @media (max-width: 768px) {
-    .fluid-sim-isolated-root .control-panel {
-        grid-template-columns: repeat(3, 1fr);
-        padding: 16px;
-        gap: 12px;
-        bottom: 10px;
-        max-height: 60vh;
-    }
-
-    .fluid-sim-isolated-root .action-btn {
-        grid-column: span 3;
-    }
-
-    .fluid-sim-isolated-root .console-toggle-btn {
-        
-        top: 8vh;
-        right: 5vw;
-        width: 48px;
-        height: 48px;
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .fluid-sim-isolated-root .control-panel {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 14px;
-        gap: 10px;
-    }
-
-    .fluid-sim-isolated-root .action-btn {
-        grid-column: span 2;
-    }
-
-    .fluid-sim-isolated-root .control-input {
-        font-size: 14px;
-        padding: 10px 6px;
-    }
-
-    .fluid-sim-isolated-root .control-label {
-        font-size: 9px;
-    }
+    .control-panel { grid-template-columns: repeat(2, 1fr); bottom: 20px; }
+    .action-btn { grid-column: span 2; }
+    .ui-header { top: 20px; left: 20px; }
+    .main-title { font-size: 32px; }
 }

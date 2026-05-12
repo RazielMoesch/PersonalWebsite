@@ -357,50 +357,56 @@ export default function FluidSim() {
     const update = (key, val) => setParams(prev => ({...prev, [key]: val}))
 
     return (
-        <div className="fluid-sim-isolated-root">
-            <canvas
-                ref={canvasRef}
-                className="fluid-canvas"
-                onMouseMove={e => handleMove(e.clientX, e.clientY, e.movementX, e.movementY)}
-                onMouseDown={() => handleStart(mouse.current.x, mouse.current.y)}
-                onMouseUp={handleEnd}
-                onMouseLeave={handleEnd}
-                onTouchStart={e => {
-                    e.preventDefault()
-                    const t = e.touches[0]
-                    handleStart(t.clientX, t.clientY)
-                }}
-                onTouchMove={e => {
-                    e.preventDefault()
-                    const t = e.touches[0]
-                    handleMove(t.clientX, t.clientY, t.clientX - mouse.current.x, t.clientY - mouse.current.y)
-                }}
-                onTouchEnd={handleEnd}
-            />
-            <div className="cursor-overlay">
-                <div className="brush-indicator" style={brushStyle} />
+            <div className="fluid-sim-isolated-root">
+        <canvas
+            ref={canvasRef}
+            className="fluid-canvas"
+            onMouseMove={e => handleMove(e.clientX, e.clientY, e.movementX, e.movementY)}
+            onMouseDown={() => handleStart(mouse.current.x, mouse.current.y)}
+            onMouseUp={handleEnd}
+            onMouseLeave={handleEnd}
+            onTouchStart={e => {
+                e.preventDefault()
+                const t = e.touches[0]
+                handleStart(t.clientX, t.clientY)
+            }}
+            onTouchMove={e => {
+                e.preventDefault()
+                const t = e.touches[0]
+                handleMove(t.clientX, t.clientY, t.clientX - mouse.current.x, t.clientY - mouse.current.y)
+            }}
+            onTouchEnd={handleEnd}
+        />
+
+        <div className="ui-header">
+            <div className="hint-container">
+                <div className="ghost-cursor"></div>
+                <span className="hint-text">TO CREATE FLUID</span>
             </div>
-            <button className="console-toggle-btn" onClick={() => setShowConsole(!showConsole)}>
-                {showConsole ? "✕" : "⚙️"}
-            </button>
-            {showConsole && (
-                <div className="control-panel">
-                    <div className="control-group"><span className="control-label">View</span><select className="control-input" value={params.mode} onChange={e => update('mode', parseInt(e.target.value))}><option value={0}>Art</option><option value={1}>Vel</option><option value={2}>Pres</option></select></div>
-                    <div className="control-group"><span className="control-label">Res</span><select className="control-input" value={params.res} onChange={e => update('res', parseInt(e.target.value))}><option value={256}>256</option><option value={512}>512</option><option value={1024}>1024</option></select></div>
-                    <div className="control-group"><span className="control-label">Dissolve</span><input type="range" className="range-slider" min="0.9" max="1.0" step="0.001" value={params.dyeDecay} onChange={e => update('dyeDecay', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">VelDecay</span><input type="range" className="range-slider" min="0.9" max="1.0" step="0.001" value={params.velDecay} onChange={e => update('velDecay', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Radius</span><input type="range" className="range-slider" min="5" max="200" value={params.radius} onChange={e => update('radius', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Strength</span><input type="range" className="range-slider" min="1" max="200" value={params.strength} onChange={e => update('strength', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Bloom</span><input type="range" className="range-slider" min="0" max="2" step="0.1" value={params.bloom} onChange={e => update('bloom', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Chroma</span><input type="range" className="range-slider" min="0" max="10" step="0.1" value={params.chromatic} onChange={e => update('chromatic', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Vort</span><input type="range" className="range-slider" min="0" max="1" step="0.01" value={params.vort} onChange={e => update('vort', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Iters</span><input type="range" className="range-slider" min="1" max="100" value={params.iter} onChange={e => update('iter', parseInt(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Time</span><input type="range" className="range-slider" min="0.001" max="0.1" step="0.001" value={params.dt} onChange={e => update('dt', parseFloat(e.target.value))} /></div>
-                    <div className="control-group"><span className="control-label">Sym</span><select className="control-input" value={params.symmetry} onChange={e => update('symmetry', parseInt(e.target.value))}><option value={0}>Off</option><option value={1}>Mirror</option><option value={3}>Quad</option></select></div>
-                    <input type="color" style={{ width: '100%', height: '30px', border: 'none', background: 'none' }} value={params.color} onChange={e => update('color', e.target.value)} />
-                    <button className="action-btn" onClick={() => { if (typeof window !== 'undefined') window.location.reload() }}>Reset</button>
-                </div>
-            )}
         </div>
+
+        <div className="cursor-overlay">
+            <div className="brush-indicator" style={brushStyle} />
+        </div>
+
+        <button className="console-toggle-btn" onClick={() => setShowConsole(!showConsole)}>
+            {showConsole ? "✕" : "⚙️"}
+        </button>
+
+        {showConsole && (
+            <div className="control-panel glass-effect">
+                <div className="control-group"><span className="control-label">View</span><select className="control-input" value={params.mode} onChange={e => update('mode', parseInt(e.target.value))}><option value={0}>Artistic</option><option value={1}>Velocity</option><option value={2}>Pressure</option></select></div>
+                <div className="control-group"><span className="control-label">Resolution</span><select className="control-input" value={params.res} onChange={e => update('res', parseInt(e.target.value))}><option value={256}>Performance</option><option value={512}>Balanced</option><option value={1024}>High-Res</option></select></div>
+                <div className="control-group"><span className="control-label">Dissolve</span><input type="range" className="range-slider" min="0.9" max="1.0" step="0.001" value={params.dyeDecay} onChange={e => update('dyeDecay', parseFloat(e.target.value))} /></div>
+                <div className="control-group"><span className="control-label">Vorticity</span><input type="range" className="range-slider" min="0" max="1" step="0.01" value={params.vort} onChange={e => update('vort', parseFloat(e.target.value))} /></div>
+                <div className="control-group"><span className="control-label">Brush Size</span><input type="range" className="range-slider" min="5" max="200" value={params.radius} onChange={e => update('radius', parseFloat(e.target.value))} /></div>
+                <div className="control-group"><span className="control-label">Strength</span><input type="range" className="range-slider" min="1" max="200" value={params.strength} onChange={e => update('strength', parseFloat(e.target.value))} /></div>
+                <div className="control-group"><span className="control-label">Bloom</span><input type="range" className="range-slider" min="0" max="2" step="0.1" value={params.bloom} onChange={e => update('bloom', parseFloat(e.target.value))} /></div>
+                <div className="control-group"><span className="control-label">Chroma</span><input type="range" className="range-slider" min="0" max="10" step="0.1" value={params.chromatic} onChange={e => update('chromatic', parseFloat(e.target.value))} /></div>
+                <input type="color" className="color-picker" value={params.color} onChange={e => update('color', e.target.value)} />
+                <button className="action-btn" onClick={() => { if (typeof window !== 'undefined') window.location.reload() }}>Reset System</button>
+            </div>
+        )}
+    </div>
     )
 }
